@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import heroVideoSource from './assets/video/video1.mp4'
+import heroVideoOptimizedSource from './assets/video/video1-optimized.mp4'
 import heroVideoPoster from './assets/video/video1-poster.webp'
 import Chatbot from './chatbot/Chatbot'
 import HeroVideoPreloader from './components/HeroVideoPreloader'
@@ -69,24 +70,30 @@ function App() {
   useEffect(()=>{
     const video=heroVideoRef.current
     if(!video)return
-    const onLoadedMetadata=()=>setIsVideoLoading(false)
+    const onLoadedMetadata=()=>setIsVideoLoading(true)
+    const onLoadedData=()=>setIsVideoLoading(false)
     const onCanPlay=()=>setIsVideoLoading(false)
     const onPlaying=()=>{setIsVideoPlaying(true);setPlaybackBlocked(false)}
     const onPause=()=>{setIsVideoPlaying(false);if(!video.ended)setPlaybackBlocked(true)}
     const onError=()=>{setIsVideoLoading(false);setIsVideoPlaying(false);setHasVideoError(true)}
+    const onStalled=()=>setIsVideoLoading(true)
     const source=video.querySelector('source')
     video.addEventListener('loadedmetadata',onLoadedMetadata)
+    video.addEventListener('loadeddata',onLoadedData)
     video.addEventListener('canplay',onCanPlay)
     video.addEventListener('playing',onPlaying)
     video.addEventListener('pause',onPause)
     video.addEventListener('error',onError)
+    video.addEventListener('stalled',onStalled)
     source?.addEventListener('error',onError)
     return()=>{
       video.removeEventListener('loadedmetadata',onLoadedMetadata)
+      video.removeEventListener('loadeddata',onLoadedData)
       video.removeEventListener('canplay',onCanPlay)
       video.removeEventListener('playing',onPlaying)
       video.removeEventListener('pause',onPause)
       video.removeEventListener('error',onError)
+      video.removeEventListener('stalled',onStalled)
       source?.removeEventListener('error',onError)
     }
   },[])
@@ -158,7 +165,8 @@ function App() {
         <section className="hero" id="home">
           <div className="hero-media" aria-hidden="true">
             <img className="hero-poster" src={heroVideoPoster} alt="" />
-            <video ref={heroVideoRef} className="hero-video" autoPlay={!prefersReducedMotion} muted loop playsInline preload="metadata" poster={heroVideoPoster}>
+            <video ref={heroVideoRef} className={`hero-video${isVideoPlaying ? ' is-playing' : ''}`} autoPlay={!prefersReducedMotion} muted loop playsInline preload="metadata" poster={heroVideoPoster}>
+              <source src={heroVideoOptimizedSource} type="video/mp4" />
               <source src={heroVideoSource} type="video/mp4" />
             </video>
           </div>

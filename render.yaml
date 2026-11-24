@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: irham-enterprise
+    runtime: node
+    plan: free
+    buildCommand: npm run build-production
+    startCommand: npm start
+    # Uses package.json build-production script which explicitly installs devDependencies
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        sync: false
+      - key: VITE_API_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        sync: false
+      - key: PORT
+        value: 3000

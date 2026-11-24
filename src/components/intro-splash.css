@@ -1,0 +1,27 @@
+.intro-splash {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  opacity: 1;
+  transition: opacity 300ms ease;
+}
+
+.intro-splash-fading {
+  opacity: 0;
+}
+
+.intro-splash img {
+  display: block;
+  width: min(82vw, 460px);
+  max-height: 80vh;
+  object-fit: contain;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-splash {
+    transition: none;
+  }
+}

@@ -185,7 +185,7 @@ function App() {
               <p className="about-description">IRHAM ENTERPRISE connects businesses to global markets through reliable import, export, auction bidding and trusted supplier partnerships. We focus on quality sourcing and dependable business relationships.</p>
             </div>
             <div className="about-illustration">
-              <img src={aboutTradeImage} width="1512" height="1040" alt="International trade and global logistics illustration for IRHAM ENTERPRISE." loading="lazy" decoding="async" />
+              <img src={aboutTradeImage} width="1488" height="880" alt="International trade and global logistics illustration for IRHAM ENTERPRISE." loading="lazy" decoding="async" />
             </div>
           </div>
           <ul className="activities-mini" aria-label="Business activities">
@@ -365,8 +365,6 @@ function App() {
 
           <div className="footer-bottom">
             <p>© 2026 {businessConfig.companyName}. All rights reserved.</p>
-            <p>GLOBAL <span>•</span> SOURCED <span>•</span> SUPPLIED</p>
-            <a className="icons8-credit" href="https://icons8.com/icon/adP55IMyNCXR/i" target="_blank" rel="noopener noreferrer">Icon by Icons8</a>
           </div>
         </div>
       </footer>

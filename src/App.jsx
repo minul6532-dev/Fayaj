@@ -8,6 +8,8 @@ import HeroVideoPreloader from './components/HeroVideoPreloader'
 import IntroSplash from './components/IntroSplash'
 import { businessConfig, getOfficeDayHoursLabel, getOfficeHoursSummary } from './config/business'
 import computerEquipmentImage from '../picture/img6.png'
+import tradeActivitiesImage from '../picture/img7.webp'
+import aboutTradeImage from '../picture/img8.webp'
 
 const navItems = [['Home','#home'],['About','#about'],['Products','#products'],['Services','#services'],['Business Activities','#activities'],['Contact','#contact']]
 const products = businessConfig.products.map((product) => ({
@@ -52,7 +54,6 @@ function App() {
   const [isVideoPlaying,setIsVideoPlaying]=useState(false)
   const [hasVideoError,setHasVideoError]=useState(false)
   const [playbackBlocked,setPlaybackBlocked]=useState(false)
-  const [prefersReducedMotion,setPrefersReducedMotion]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   const [inquirySent,setInquirySent]=useState(false)
   const [isSubmitting,setIsSubmitting]=useState(false)
   const [form,setForm]=useState({name:'',phone:'',category:products[0].name,quantity:'',country:'',message:''})
@@ -61,12 +62,6 @@ function App() {
   const heroVideoRef=useRef(null)
   useEffect(()=>{const onScroll=()=>setScrolled(window.scrollY>24);onScroll();window.addEventListener('scroll',onScroll,{passive:true});return()=>window.removeEventListener('scroll',onScroll)},[])
   useEffect(()=>{document.body.style.overflow=menuOpen?'hidden':'';return()=>{document.body.style.overflow=''}},[menuOpen])
-  useEffect(()=>{
-    const motionPreference=window.matchMedia('(prefers-reduced-motion: reduce)')
-    const onMotionPreferenceChange=(event)=>setPrefersReducedMotion(event.matches)
-    motionPreference.addEventListener('change',onMotionPreferenceChange)
-    return()=>motionPreference.removeEventListener('change',onMotionPreferenceChange)
-  },[])
   useEffect(()=>{
     const video=heroVideoRef.current
     if(!video)return
@@ -100,7 +95,6 @@ function App() {
   useEffect(()=>{
     const video=heroVideoRef.current
     if(!video)return
-    if(prefersReducedMotion){video.pause();setPlaybackBlocked(true);return}
     let cancelled=false
     video.play().catch(()=>{
       if(cancelled)return
@@ -109,7 +103,7 @@ function App() {
       else setPlaybackBlocked(true)
     })
     return()=>{cancelled=true}
-  },[prefersReducedMotion])
+  },[])
   const playHeroVideo=()=>{
     const video=heroVideoRef.current
     if(!video||hasVideoError)return
@@ -165,7 +159,7 @@ function App() {
         <section className="hero" id="home">
           <div className="hero-media" aria-hidden="true">
             <img className="hero-poster" src={heroVideoPoster} alt="" />
-            <video ref={heroVideoRef} className={`hero-video${isVideoPlaying ? ' is-playing' : ''}`} autoPlay={!prefersReducedMotion} muted loop playsInline preload="metadata" poster={heroVideoPoster}>
+            <video ref={heroVideoRef} className={`hero-video${isVideoPlaying ? ' is-playing' : ''}`} autoPlay muted loop playsInline preload="metadata" poster={heroVideoPoster}>
               <source src={heroVideoOptimizedSource} type="video/mp4" />
               <source src={heroVideoSource} type="video/mp4" />
             </video>
@@ -173,15 +167,31 @@ function App() {
           <HeroVideoPreloader visible={isVideoLoading&&!hasVideoError} />
           <div className="hero-content">
             <p className="eyebrow">IRHAM ENTERPRISE</p>
-            <h1>IMPORT <span aria-hidden="true">•</span> EXPORT <span aria-hidden="true">•</span> SOURCE <span aria-hidden="true">•</span> SUPPLY</h1>
+            <h1><span className="hero-heading-line">IMPORT <span className="hero-heading-separator" aria-hidden="true">•</span> EXPORT</span>{' '}<span className="hero-heading-line">SOURCE <span className="hero-heading-separator" aria-hidden="true">•</span> SUPPLY</span></h1>
             <p className="hero-lead">Connecting global markets through trusted business relationships.</p>
             <div className="hero-actions"><a className="button button-primary" href="#products">Explore Our Products <span aria-hidden="true">→</span></a><a className="button button-secondary" href="#contact">Contact Us</a></div>
           </div>
           {isVideoPlaying&&<span className="hero-video-status" role="status"><span aria-hidden="true" />NOW PLAYING</span>}
-          {!isVideoPlaying&&(playbackBlocked||prefersReducedMotion)&&!hasVideoError&&<button className="hero-video-play" type="button" onClick={playHeroVideo}>Play intro <span aria-hidden="true">▶</span></button>}
+          {!isVideoPlaying&&playbackBlocked&&!hasVideoError&&<button className="hero-video-play" type="button" onClick={playHeroVideo}><span className="hero-video-play-label">Play intro</span><span className="hero-video-play-icon" aria-hidden="true">▶</span></button>}
           {hasVideoError&&<p className="hero-video-error" role="status">Video preview unavailable. You can still explore our products below.</p>}
         </section>
-        <section className="section about" id="about"><div className="section-heading"><p className="eyebrow dark">ABOUT IRHAM ENTERPRISE</p><h2>Connecting International Trade With Business Opportunities.</h2></div><div className="about-grid"><p>IRHAM ENTERPRISE supports businesses through export, import, auction bidding and supplier connections. Our approach is built around clear requirements, relevant product sourcing and dependable business communication.</p><div className="activities-mini">{activities.map(([number,title])=><div key={title}><span>{number}</span><strong>{title}</strong></div>)}</div></div></section>
+        <section className="section about" id="about">
+          <div className="about-intro">
+            <div className="about-copy">
+              <div className="section-heading">
+                <p className="eyebrow dark">ABOUT IRHAM ENTERPRISE</p>
+                <h2>Connecting International Trade With Business Opportunities.</h2>
+              </div>
+              <p className="about-description">IRHAM ENTERPRISE connects businesses to global markets through reliable import, export, auction bidding and trusted supplier partnerships. We focus on quality sourcing and dependable business relationships.</p>
+            </div>
+            <div className="about-illustration">
+              <img src={aboutTradeImage} width="1512" height="1040" alt="International trade and global logistics illustration for IRHAM ENTERPRISE." loading="lazy" decoding="async" />
+            </div>
+          </div>
+          <ul className="activities-mini" aria-label="Business activities">
+            {activities.map(([number,title])=><li key={title}><span>{number}</span><strong>{title}</strong></li>)}
+          </ul>
+        </section>
         <section className="section products" id="products"><div className="section-heading"><p className="eyebrow dark">OUR PRODUCT CATEGORIES</p><h2>Products That Connect Markets.</h2></div><div className="product-grid">{products.map((product,index)=><article className="product-card" id={`product-category-${index+1}`} key={product.name}><div className="product-image"><img src={product.image} alt={product.name} loading="lazy"/></div><div className="product-copy"><p className="product-tag">{product.category}</p><h3>{product.name}</h3><p>{product.description}</p><ul>{product.items.map(item=><li key={item}>{item}</li>)}</ul><a href="#contact">Enquire <span aria-hidden="true">→</span></a></div></article>)}</div></section>
         <section className="section services" id="services" aria-labelledby="process-title">
           <div className="section-heading">
@@ -206,7 +216,19 @@ function App() {
             ))}
           </div>
         </section>
-        <section className="section activities" id="activities"><div className="section-heading"><p className="eyebrow">Business activities</p><h2>Focused capabilities for international trade.</h2></div><div className="activity-grid">{activities.map(([number,title,description])=><article key={title}><span>{number}</span><h3>{title}</h3><p>{description}</p></article>)}</div><div className="why"><p className="eyebrow dark">Why IRHAM ENTERPRISE</p><h3>Clear communication. Relevant sourcing. Practical trade connections.</h3></div></section>
+        <section className="section activities" id="activities">
+          <div className="activities-intro">
+            <div className="section-heading">
+              <p className="eyebrow">Business activities</p>
+              <h2>Focused capabilities for international trade.</h2>
+            </div>
+            <div className="activities-illustration">
+              <img src={tradeActivitiesImage} width="2172" height="724" alt="International trade and global logistics illustration" loading="lazy" decoding="async" />
+            </div>
+          </div>
+          <div className="activity-grid">{activities.map(([number,title,description])=><article key={title}><span>{number}</span><h3>{title}</h3><p>{description}</p></article>)}</div>
+          <div className="why"><p className="eyebrow dark">Why IRHAM ENTERPRISE</p><h3>Clear communication. Relevant sourcing. Practical trade connections.</h3></div>
+        </section>
         <section className="section founder" id="founder"><div className="founder-portrait" aria-label="Initial monogram for Omar Fayaj Chy"><span>OFC</span></div><div className="founder-copy"><p className="eyebrow">Founder profile</p><h2>Omar Fayaj Chy</h2><p className="designation">Founder, IRHAM ENTERPRISE</p><p className="qualifications">BSS (Hon&apos;s) • MSS (CU) • LLB (NU)</p></div></section>
         <section className="section quote-section" id="contact">
           <div className="quote-panel">
